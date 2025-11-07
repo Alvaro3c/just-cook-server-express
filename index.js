@@ -1,12 +1,14 @@
 import express from 'express'
 import { config } from 'dotenv'
 import { initDatabase } from './database/initDatabase.js'
+import cors from 'cors'
 // Routes
 import userRoutes from './routes/userRoutes.js'
 import recipeRoutes from './routes/recepiesRoutes.js'
 import ingredientRoutes from './routes/inredientRoutes.js'
 
 const app = express()
+app.use(cors());
 const PORT = 3000
 config() //env
 
