@@ -7,9 +7,12 @@ export const userQueries = {
 
     getAllUsers: 'SELECT * FROM usuarios ',
     getUserByEmail: `
-        SELECT email FROM usuarios 
+        SELECT id, nombre, email, contraseña_hash FROM usuarios 
         WHERE email = $1
-
+    `,
+    getUserById: `
+        SELECT id, nombre, email FROM usuarios 
+        WHERE id = $1
     `,
 
     dropTable: 'DROP TABLE IF EXISTS usuarios',

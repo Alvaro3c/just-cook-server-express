@@ -17,6 +17,7 @@ export const tableQueries = {
             porciones INTEGER,
             dificultad VARCHAR(50) DEFAULT 'media',
             instrucciones TEXT
+            ingredientes TEXT[]
         )
     `,
 
@@ -33,10 +34,6 @@ export const tableQueries = {
             id SERIAL PRIMARY KEY,
             usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
             ingrediente_id INTEGER NOT NULL REFERENCES ingredientes(id) ON DELETE CASCADE,
-            cantidad DECIMAL(10,2) NOT NULL,
-            unidad VARCHAR(50) NOT NULL,
-            fecha_caducidad DATE,
-            actualizado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             UNIQUE(usuario_id, ingrediente_id)
         )
     `,

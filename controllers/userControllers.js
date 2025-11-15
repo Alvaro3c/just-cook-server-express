@@ -77,4 +77,36 @@ export const userController = {
             })
         }
     },
+    getUserProfile: async (req, res) => {
+        try {
+            const client = await pool.connect();
+            try {
+                const result = await client.query(userQueries.getUserById, [req.userId]);
+                const user = result.rows[0];
+
+                if (!user) {
+                    return res.status(404).json({
+                        error: 'Usuario no encontrado'
+                    });
+                }
+
+                return res.json({
+                    user: {
+                        id: user.id,
+                        nombre: user.nombre,
+                        email: user.email
+                    }
+                });
+
+            } finally {
+                client.release();
+            }
+        } catch (error) {
+            console.error('Error obteniendo perfil:', error);
+            return res.status(500).json({
+                error: 'Error interno del servidor',
+                details: error.message
+            });
+        }
+    }
 }

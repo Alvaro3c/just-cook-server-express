@@ -140,7 +140,7 @@ export const recepiesControllers = {
     // Añadir múltiples recetas desde JSON
     // Añadir múltiples recetas desde JSON
     addMultipleRecipes: async (req, res) => {
-        const { recetas } = req.body;
+        const recetas = Array.isArray(req.body.recetas) ? req.body.recetas : req.body;
 
         try {
             if (!recetas || !Array.isArray(recetas)) {
@@ -177,7 +177,8 @@ export const recepiesControllers = {
                             receta.instrucciones,
                             receta.tiempo_preparacion || null,
                             receta.porciones || null,
-                            receta.dificultad || 'media'
+                            receta.dificultad || 'media',
+                            receta.ingredientes
                         ]);
 
                         console.log(`Receta ${index} insertada correctamente:`, result.rows[0].id);

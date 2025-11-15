@@ -2,7 +2,7 @@ export const recepiesQueries = {
     // Ver todas las recetas
     getAllRecipes: `
         SELECT id, titulo, descripcion, 
-               tiempo_preparacion, porciones, dificultad, instrucciones
+               tiempo_preparacion, porciones, dificultad, instrucciones,ingredientes
         FROM recetas 
         ORDER BY titulo
     `,
@@ -10,7 +10,7 @@ export const recepiesQueries = {
     // Ver recetas favoritas de un usuario
     getUserFavorites: `
         SELECT r.id, r.titulo, r.descripcion, 
-               r.tiempo_preparacion, r.porciones, r.dificultad, r.instrucciones
+               r.tiempo_preparacion, r.porciones, r.dificultad, r.instrucciones, r.ingredientes
         FROM recetas r
         JOIN usuario_recetas_favoritas urf ON r.id = urf.receta_id
         WHERE urf.usuario_id = $1
@@ -49,8 +49,9 @@ export const recepiesQueries = {
         instrucciones, 
         tiempo_preparacion, 
         porciones, 
-        dificultad
-    ) VALUES ($1, $2, $3, $4, $5, $6) 
+        dificultad,
+        ingredientes
+    ) VALUES ($1, $2, $3, $4, $5, $6,$7) 
     RETURNING *
 `
 }
