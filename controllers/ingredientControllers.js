@@ -24,12 +24,12 @@ export const ingredientController = {
     },
     // Añadir nuevo ingrediente
     createIngredient: async (req, res) => {
-        const { nombre, unidad_base } = req.body
+        const { nombre, cantidad, fecha_caducidad } = req.body
 
         try {
-            if (!nombre || !unidad_base) {
+            if (!nombre || !cantidad) {
                 return res.status(400).json({
-                    error: 'Nombre y unidad_base son requeridos'
+                    error: 'Nombre y cantidad son requeridos'
                 })
             }
 
@@ -37,7 +37,8 @@ export const ingredientController = {
             try {
                 const result = await client.query(ingredientQueries.createIngredient, [
                     nombre,
-                    unidad_base
+                    cantidad,
+                    fecha_caducidad
                 ])
 
                 return res.status(201).json({
@@ -157,22 +158,27 @@ export const ingredientController = {
     },
     // En controllers/ingredientControllers.js
     createIngredientForUser: async (req, res) => {
-        const { userId } = req.params; // ← Ahora viene de la URL
-        const { nombre, cantidad, fecha_caducidad } = req.body
+        const { userId } = req.params; // $2 en la query
+        const { nombre, cantidad, fecha_caducidad } = req.body // $1, $3, $4 en la query
 
         try {
+            // Validación de campos requeridos (userId en URL, nombre y cantidad en body)
             if (!userId || !nombre || !cantidad) {
                 return res.status(400).json({
-                    error: 'userId (en URL), nombre y cantidad son requeridos'
+                    error: 'userId (en URL), nombre y cantidad (en body) son requeridos'
                 })
             }
 
             const client = await pool.connect()
             try {
+                // Se pasan 4 parámetros, mapeados correctamente a la query modificada:
+                // $1: nombre (ingrediente)
+                // $2: userId (usuario_ingredientes_despensa)
+                // $3: cantidad (usuario_ingredientes_despensa)
+                // $4: fecha_caducidad (usuario_ingredientes_despensa)
                 const result = await client.query(ingredientQueries.createIngredientForUser, [
                     nombre,
-                    cantidad,
-                    userId, // ← Ahora es el parámetro de la URL
+                    userId,
                     cantidad,
                     fecha_caducidad || null
                 ])
@@ -185,14 +191,16 @@ export const ingredientController = {
                 client.release()
             }
         } catch (error) {
-            if (error.code === '23503') {
+            if (error.code === '23503') { // Maneja específicamente si el usuario_id no existe
                 return res.status(404).json({
                     error: 'Usuario no encontrado'
                 })
             }
+            // Manejo de errores de tipo de dato o internos
             console.error('Error creando ingrediente para usuario:', error)
             return res.status(500).json({
-                error: 'Error interno del servidor'
+                error: 'Error interno del servidor',
+                detail: error.message // Útil para debug
             })
         }
     },

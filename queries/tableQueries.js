@@ -16,7 +16,7 @@ export const tableQueries = {
             tiempo_preparacion INTEGER,
             porciones INTEGER,
             dificultad VARCHAR(50) DEFAULT 'media',
-            instrucciones TEXT
+            instrucciones TEXT,
             ingredientes TEXT[]
         )
     `,
@@ -25,7 +25,8 @@ export const tableQueries = {
         CREATE TABLE IF NOT EXISTS ingredientes (
             id SERIAL PRIMARY KEY,
             nombre VARCHAR(100) UNIQUE NOT NULL,
-            unidad_base VARCHAR(50) NOT NULL
+            unidad_base VARCHAR(50) NOT NULL,
+            fecha_de_caducidad DATE
         )
     `,
 

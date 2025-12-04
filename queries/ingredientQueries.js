@@ -8,9 +8,9 @@ export const ingredientQueries = {
 
     // Añadir nuevo ingrediente
     createIngredient: `
-        INSERT INTO ingredientes (nombre, unidad_base, fecha_de_caducidad) 
+        INSERT INTO ingredientes (nombre, cantidad, fecha_caducidad) 
         VALUES ($1, $2, $3) 
-        RETURNING id, nombre, unidad_base
+        RETURNING id, nombre, cantidad
     `,
 
     // Modificar un ingrediente específico
@@ -41,13 +41,14 @@ export const ingredientQueries = {
     `,
     createIngredientForUser: `
     WITH nuevo_ingrediente AS (
-        INSERT INTO ingredientes (nombre, cantidad) 
-        VALUES ($1, $2)
-        ON CONFLICT (nombre) DO UPDATE SET nombre = EXCLUDED.nombre
-        RETURNING id
-    )
+    -- 1. Intenta crear el ingrediente base o recupera su ID si ya existe
+    INSERT INTO ingredientes (nombre, cantidad, fecha_caducidad) 
+    VALUES ($1, NULL, NULL) -- Solo se usa $1 (nombre). Las otras dos columnas son redundantes aquí.
+    ON CONFLICT (nombre) DO UPDATE SET nombre = EXCLUDED.nombre
+    RETURNING id AS ingrediente_id
+    )   
     INSERT INTO usuario_ingredientes_despensa (usuario_id, ingrediente_id, cantidad, fecha_caducidad)
-    SELECT $3, id, $4, $5 FROM nuevo_ingrediente
+    SELECT $2, ingrediente_id, $3, $4 FROM nuevo_ingrediente -- Reutilizando el ID del ingrediente.
     RETURNING id, usuario_id, ingrediente_id, cantidad, fecha_caducidad
 `,
     deleteUserIngredient: `
