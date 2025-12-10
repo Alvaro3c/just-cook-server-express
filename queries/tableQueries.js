@@ -25,7 +25,7 @@ export const tableQueries = {
         CREATE TABLE IF NOT EXISTS ingredientes (
             id SERIAL PRIMARY KEY,
             nombre VARCHAR(100) UNIQUE NOT NULL,
-            unidad_base VARCHAR(50) NOT NULL,
+            cantidad VARCHAR(50) NOT NULL,
             fecha_de_caducidad DATE
         )
     `,

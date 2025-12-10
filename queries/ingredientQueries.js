@@ -40,16 +40,16 @@ export const ingredientQueries = {
     ORDER BY i.nombre
     `,
     createIngredientForUser: `
-    WITH nuevo_ingrediente AS (
+WITH nuevo_ingrediente AS (
     -- 1. Intenta crear el ingrediente base o recupera su ID si ya existe
     INSERT INTO ingredientes (nombre, cantidad, fecha_caducidad) 
-    VALUES ($1, NULL, NULL) -- Solo se usa $1 (nombre). Las otras dos columnas son redundantes aquí.
+    VALUES ($1, '', $4) -- Poner string vacío en vez de NULL para cantidad
     ON CONFLICT (nombre) DO UPDATE SET nombre = EXCLUDED.nombre
     RETURNING id AS ingrediente_id
-    )   
-    INSERT INTO usuario_ingredientes_despensa (usuario_id, ingrediente_id, cantidad, fecha_caducidad)
-    SELECT $2, ingrediente_id, $3, $4 FROM nuevo_ingrediente -- Reutilizando el ID del ingrediente.
-    RETURNING id, usuario_id, ingrediente_id, cantidad, fecha_caducidad
+)   
+INSERT INTO usuario_ingredientes_despensa (usuario_id, ingrediente_id, cantidad, fecha_caducidad)
+SELECT $2, ingrediente_id, $3, $4 FROM nuevo_ingrediente
+RETURNING id, usuario_id, ingrediente_id, cantidad, fecha_caducidad
 `,
     deleteUserIngredient: `
     DELETE FROM usuario_ingredientes_despensa 
