@@ -4,8 +4,9 @@ import { authenticateToken } from '../middleware/authMiddleware.js'
 
 const router = express.Router()
 
-// Rutas de usuarios
+// ver todos los usuarios
 router.get('/usuarios', authenticateToken, userController.getAllUsers)
+// añadir un usuario
 router.post('/usuarios', userController.createUser)
 
 export default router

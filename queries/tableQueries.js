@@ -26,7 +26,7 @@ export const tableQueries = {
             id SERIAL PRIMARY KEY,
             nombre VARCHAR(100) UNIQUE NOT NULL,
             cantidad VARCHAR(50) NOT NULL,
-            fecha_de_caducidad DATE
+            fecha_caducidad DATE
         )
     `,
 
@@ -34,6 +34,7 @@ export const tableQueries = {
         CREATE TABLE IF NOT EXISTS usuario_ingredientes_despensa (
             id SERIAL PRIMARY KEY,
             usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+            cantidad VARCHAR(50),
             ingrediente_id INTEGER NOT NULL REFERENCES ingredientes(id) ON DELETE CASCADE,
             UNIQUE(usuario_id, ingrediente_id)
         )

@@ -13,8 +13,6 @@ const generateToken = (userId) => {
 export const authController = {
     login: async (req, res) => {
         const { email, contraseña } = req.body;
-        console.log('📧 Email recibido:', email); // 👈 Debug
-        console.log('🔐 Contraseña recibida:', contraseña ? 'SÍ' : 'NO'); // 👈 Debug
         try {
             // Validaciones básicas
             if (!email || !contraseña) {
@@ -29,9 +27,9 @@ export const authController = {
                 // Buscar usuario por email
                 const result = await client.query(userQueries.getUserByEmail, [email]);
                 const user = result.rows[0];
-                console.log('👤 Usuario encontrado:', user ? 'SÍ' : 'NO'); // 👈 Debug
+                console.log('Usuario encontrado:', user ? 'SÍ' : 'NO');
                 if (user) {
-                    console.log('🗝️ Hash en BD:', user.contraseña_hash ? 'SÍ' : 'NO'); // 👈 Debug
+                    console.log('Hash en BD:', user.contraseña_hash ? 'SÍ' : 'NO');
                 }
                 if (!user) {
                     return res.status(401).json({
@@ -40,7 +38,7 @@ export const authController = {
                     });
                 }
                 if (!user.contraseña_hash) {
-                    console.error('❌ ERROR: contraseña_hash es undefined para usuario:', user.id);
+                    console.error('ERROR: contraseña_hash es undefined para usuario:', user.id);
                     return res.status(500).json({
                         success: false,
                         error: 'Error en los datos del usuario'
@@ -66,10 +64,9 @@ export const authController = {
                     maxAge: 7 * 24 * 60 * 60 * 1000 // 7 días
                 });
 
-                // Respuesta exitosa
                 return res.json({
                     success: true,
-                    message: 'Login exitoso',
+                    message: 'usuario ha sido logeado',
                     user: {
                         id: user.id,
                         nombre: user.nombre,
@@ -135,7 +132,6 @@ export const authController = {
         }
     },
 
-    // Middleware para verificar autenticación (opcional, si lo quieres en el controller)
     verifyAuth: (req, res) => {
         return res.json({
             success: true,

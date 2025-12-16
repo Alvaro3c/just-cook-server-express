@@ -6,7 +6,6 @@ export const userController = {
     createUser: async (req, res) => {
         const { nombre, email, contraseña } = req.body
         try {
-            // Validaciones básicas
             if (!nombre || !email || !contraseña) {
                 return res.status(400).json({
                     error: 'Todos los campos son requeridos: nombre, email, password'

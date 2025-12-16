@@ -110,7 +110,6 @@ describe('Pruebas para crear ingredientes', () => {
             error: 'Usuario no encontrado'
         };
 
-        // Simular usuario que no existe (ID 999)
         const ingredientData = {
             nombre: 'Azúcar',
             cantidad: 300,

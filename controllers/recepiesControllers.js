@@ -138,7 +138,6 @@ export const recepiesControllers = {
         }
     },
     // Añadir múltiples recetas desde JSON
-    // Añadir múltiples recetas desde JSON
     addMultipleRecipes: async (req, res) => {
         const recetas = Array.isArray(req.body.recetas) ? req.body.recetas : req.body;
 
@@ -160,7 +159,6 @@ export const recepiesControllers = {
                     try {
                         console.log(`Procesando receta ${index}:`, receta.titulo);
 
-                        // ✅ CORREGIDO: Solo validar campos que existen en tu tabla
                         if (!receta.titulo || !receta.instrucciones) {
                             errors.push({
                                 index,
@@ -170,7 +168,6 @@ export const recepiesControllers = {
                             continue;
                         }
 
-                        // ✅ CORREGIDO: Insertar solo los campos que existen en tu tabla
                         const result = await client.query(recepiesQueries.addRecipe, [
                             receta.titulo,
                             receta.descripcion || null,
